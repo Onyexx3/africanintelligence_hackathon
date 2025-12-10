@@ -9,6 +9,9 @@ import StudentDashboard from "./pages/student/Dashboard";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Welcome from "./pages/auth/Welcome";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import VerifyEmail from "./pages/VerifyEmail";
 import { Toaster } from "@/components/ui/toaster";
 import { NavigationProvider } from "./contexts/NavigationContext";
 import Layout from "./components/layout/Layout";
@@ -45,6 +48,9 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/welcome" element={<Welcome />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
               
               {/* Protected Routes */}
               <Route path="/admin" element={<Layout userType="admin" />}>
