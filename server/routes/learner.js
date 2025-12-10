@@ -69,7 +69,7 @@ router.get('/courses', auth, roleAuth(['student']), async (req, res) => {
 });
 
 // Get a specific enrolled course with progress
-router.get('/courses/:courseId', auth, roleAuth(['student']), async (req, res) => {
+router.get('/courses/:courseId', auth, roleAuth(['learner']), async (req, res) => {
   try {
     let db = req.app.locals.db;
     let courseId = req.params.courseId;
@@ -116,7 +116,7 @@ router.get('/courses/:courseId', auth, roleAuth(['student']), async (req, res) =
 });
 
 // Check enrollment status for a course
-router.get('/courses/:courseId/status', auth, roleAuth(['student']), async (req, res) => {
+router.get('/courses/:courseId/status', auth, roleAuth(['learner']), async (req, res) => {
   try {
     let db = req.app.locals.db;
     let courseId = req.params.courseId;

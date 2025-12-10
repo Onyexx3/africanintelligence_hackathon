@@ -6,7 +6,7 @@ const roleAuth = require('../middleware/roleAuth');
 const studentServices = require('../services/studentServices');
 
 // Get student's enrolled courses
-router.get('/courses', auth, roleAuth(['student']), async (req, res) => {
+router.get('/courses', auth, roleAuth(['learner']), async (req, res) => {
   try {
     const db = req.app.locals.db;
     const userId = req.user.userId;
@@ -19,7 +19,7 @@ router.get('/courses', auth, roleAuth(['student']), async (req, res) => {
 });
 
 // Get course progress
-router.get('/courses/:id/progress', auth, roleAuth(['student']), async (req, res) => {
+router.get('/courses/:id/progress', auth, roleAuth(['learner']), async (req, res) => {
   try {
     const db = req.app.locals.db;
     const userId = req.user.userId;
@@ -33,7 +33,7 @@ router.get('/courses/:id/progress', auth, roleAuth(['student']), async (req, res
 });
 
 // Update course progress
-router.post('/courses/:id/progress', auth, roleAuth(['student']), async (req, res) => {
+router.post('/courses/:id/progress', auth, roleAuth(['learner']), async (req, res) => {
   try {
     const db = req.app.locals.db;
     const userId = req.user.userId;
@@ -48,7 +48,7 @@ router.post('/courses/:id/progress', auth, roleAuth(['student']), async (req, re
 });
 
 // Mark module as complete
-router.post('/courses/:id/complete-module/:moduleId', auth, roleAuth(['student']), async (req, res) => {
+router.post('/courses/:id/complete-module/:moduleId', auth, roleAuth(['learner']), async (req, res) => {
   try {
     const db = req.app.locals.db;
     const userId = req.user.userId;
@@ -63,7 +63,7 @@ router.post('/courses/:id/complete-module/:moduleId', auth, roleAuth(['student']
 });
 
 // Submit quiz answers
-router.post('/courses/:id/quiz/:quizId', auth, roleAuth(['student']), async (req, res) => {
+router.post('/courses/:id/quiz/:quizId', auth, roleAuth(['learner']), async (req, res) => {
   try {
     const db = req.app.locals.db;
     const userId = req.user.userId;
