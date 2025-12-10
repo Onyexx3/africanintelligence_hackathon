@@ -16,6 +16,7 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const passwordResetRoutes = require('./routes/passwordReset');
 const emailVerificationRoutes = require('./routes/emailVerification');
+const twoFactorRoutes = require('./routes/twoFactor');
 const adminServices = require('./services/adminServices');
 const webpush = require('web-push');
 const { clg } = require('./routes/basics');
@@ -119,6 +120,7 @@ async function startServer() {
     app.use('/api/contact', contactRoutes);
     app.use('/api/password-reset', passwordResetRoutes);
     app.use('/api/email-verification', emailVerificationRoutes);
+    app.use('/api/2fa', twoFactorRoutes);
     
     // Serve static files in production
     if (process.env.NODE_ENV === 'production') {
