@@ -148,5 +148,118 @@ const sendWelcomeEmail = async (user, courses = []) => {
   }
 };
 
-module.exports = sendEnrollmentNotification;
-module.exports.sendWelcomeEmail = sendWelcomeEmail;
+/**
+ * Send password reset email
+ */
+const sendPasswordResetEmail = async (email, name, resetUrl) => {
+  try {
+    const transporter = createTransporter();
+    
+    const info = await transporter.sendMail({
+      from: `"African Intelligence LMS" <${email_user}>`,
+      to: email,
+      subject: 'Password Reset Request',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="color: #e53e3e; margin: 0;">African Intelligence LMS</h1>
+            <p style="color: #718096; margin-top: 5px;">Advancing Education in Africa</p>
+          </div>
+          
+          <div style="margin-bottom: 20px;">
+            <h2 style="color: #2d3748;">Password Reset Request</h2>
+            <p style="color: #4a5568;">Hi ${name},</p>
+            <p style="color: #4a5568;">You requested to reset your password. Click the button below to reset it:</p>
+          </div>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetUrl}" style="background-color: #e53e3e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+              Reset Password
+            </a>
+          </div>
+          
+          <div style="background-color: #fff5f5; padding: 15px; border-radius: 5px; border-left: 4px solid #fc8181; margin: 20px 0;">
+            <p style="margin: 0; color: #742a2a; font-size: 14px;"><strong>⚠️ Security Notice:</strong></p>
+            <p style="margin: 5px 0 0; color: #742a2a; font-size: 14px;">This link will expire in 1 hour. If you didn't request this, please ignore this email.</p>
+          </div>
+          
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <p style="color: #718096; font-size: 12px; margin: 0;">Or copy and paste this URL into your browser:</p>
+            <p style="color: #4299e1; font-size: 12px; word-break: break-all;">${resetUrl}</p>
+          </div>
+          
+          <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <p style="color: #a0aec0; font-size: 12px; margin: 0;"> ${new Date().getFullYear()} African Intelligence LMS. All rights reserved.</p>
+          </div>
+        </div>
+      `
+    });
+    
+    console.log('Password reset email sent:', info.messageId);
+    return info;
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    throw error;
+  }
+};
+
+/**
+ * Send email verification link
+ */
+const sendVerificationEmail = async (email, name, verificationUrl) => {
+  try {
+    const transporter = createTransporter();
+    
+    const info = await transporter.sendMail({
+      from: `"African Intelligence LMS" <${email_user}>`,
+      to: email,
+      subject: 'Verify Your Email Address',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="color: #e53e3e; margin: 0;">African Intelligence LMS</h1>
+            <p style="color: #718096; margin-top: 5px;">Advancing Education in Africa</p>
+          </div>
+          
+          <div style="margin-bottom: 20px;">
+            <h2 style="color: #2d3748;">Verify Your Email</h2>
+            <p style="color: #4a5568;">Hi ${name},</p>
+            <p style="color: #4a5568;">Thank you for registering! Please verify your email address to activate your account:</p>
+          </div>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${verificationUrl}" style="background-color: #38a169; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+              Verify Email Address
+            </a>
+          </div>
+          
+          <div style="background-color: #f0fdf4; padding: 15px; border-radius: 5px; border-left: 4px solid #68d391; margin: 20px 0;">
+            <p style="margin: 0; color: #22543d; font-size: 14px;">This link will expire in 24 hours.</p>
+          </div>
+          
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <p style="color: #718096; font-size: 12px; margin: 0;">Or copy and paste this URL into your browser:</p>
+            <p style="color: #4299e1; font-size: 12px; word-break: break-all;">${verificationUrl}</p>
+          </div>
+          
+          <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <p style="color: #a0aec0; font-size: 12px; margin: 0;"> ${new Date().getFullYear()} African Intelligence LMS. All rights reserved.</p>
+          </div>
+        </div>
+      `
+    });
+    
+    console.log('Verification email sent:', info.messageId);
+    return info;
+  } catch (error) {
+    console.error('Error sending verification email:', error);
+    throw error;
+  }
+};
+
+module.exports = {
+  sendEnrollmentNotification,
+  sendWelcomeEmail,
+  sendPasswordResetEmail,
+  sendVerificationEmail
+};

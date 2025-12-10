@@ -14,6 +14,8 @@ const forumRoutes = require('./routes/forumRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const passwordResetRoutes = require('./routes/passwordReset');
+const emailVerificationRoutes = require('./routes/emailVerification');
 const adminServices = require('./services/adminServices');
 const webpush = require('web-push');
 const { clg } = require('./routes/basics');
@@ -115,6 +117,8 @@ async function startServer() {
     app.use('/api/notifications', notificationRoutes);
     app.use('/api/upload', uploadLimiter, uploadRoutes);
     app.use('/api/contact', contactRoutes);
+    app.use('/api/password-reset', passwordResetRoutes);
+    app.use('/api/email-verification', emailVerificationRoutes);
     
     // Serve static files in production
     if (process.env.NODE_ENV === 'production') {
