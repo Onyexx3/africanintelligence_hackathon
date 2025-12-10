@@ -46,7 +46,7 @@ router.post('/register', async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role || 'learner',
+      role: role || 'student',
       profilePicture: '',
       bio: '',
       enrolledCourses: [],
@@ -174,7 +174,7 @@ router.post('/google', async (req, res) => {
         name,
         email,
         password: '', // No password for Google users
-        role: role || 'learner',
+        role: role || 'student',
         profilePicture: payload.picture || '',
         bio: '',
         enrolledCourses: [],
