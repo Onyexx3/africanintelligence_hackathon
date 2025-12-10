@@ -17,6 +17,7 @@ const adminServices = require('./services/adminServices');
 const webpush = require('web-push');
 const { clg } = require('./routes/basics');
 const { apiLimiter, authLimiter, uploadLimiter } = require('./middleware/rateLimiter');
+const { errorConverter, errorHandler, notFound } = require('./middleware/errorHandler');
 
 // Configure the environment
 require('dotenv').config();
@@ -101,6 +102,13 @@ async function startServer() {
         res.sendFile(path.resolve(__dirname, '../build', 'index.html'));
       });
     }
+    
+    // 404 handler
+    app.use(notFound);
+    
+    // Error handling middleware (must be last)
+    app.use(errorConverter);
+    app.use(errorHandler);
     
     // Start the server
     app.listen(PORT, () => {
