@@ -6,7 +6,8 @@ const { OAuth2Client } = require('google-auth-library');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const { sendWelcomeEmail } = require('../utils/mailer');
-const { vapid_private_key, clientID } = require('../configs/config');
+const { clientID } = require('../configs/config');
+const JWT_SECRET = process.env.JWT_SECRET || process.env.VAPID_PRIVATE_KEY;
 const { clg } = require('./basics');
 const { body, validationResult } = require('express-validator');
 
@@ -59,7 +60,7 @@ router.post('/register', async (req, res) => {
     // Generate JWT token
     const token = jwt.sign(
       { userId: result.insertedId.toString(), role: newUser.role },
-      vapid_private_key,
+      JWT_SECRET,
       { expiresIn: '7d' }
     );
     
@@ -115,7 +116,7 @@ router.post('/login', async (req, res) => {
     // Generate JWT token
     const token = jwt.sign(
       { userId: user._id.toString(), role: user.role },
-      vapid_private_key,
+      JWT_SECRET,
       { expiresIn: '7d' }
     );
     
@@ -202,7 +203,7 @@ router.post('/google', async (req, res) => {
     // Generate JWT token
     const jwtToken = await jwt.sign(
       { userId: user._id.toString(), role: user.role },
-      vapid_private_key,
+      JWT_SECRET,
       { expiresIn: '7d' }
     );
 

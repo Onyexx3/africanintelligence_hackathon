@@ -23,7 +23,9 @@ const setupSocket = (server, db) => {
         return next(new Error('Authentication error: No token provided'));
       }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      // Use JWT_SECRET, fallback to VAPID key for backwards compatibility
+      const JWT_SECRET = process.env.JWT_SECRET || process.env.VAPID_PRIVATE_KEY;
+      const decoded = jwt.verify(token, JWT_SECRET);
       const user = await db.collection('users').findOne(
         { _id: new ObjectId(decoded.id) },
         { projection: { _id: 1, name: 1, email: 1 } }

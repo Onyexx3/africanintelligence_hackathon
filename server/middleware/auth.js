@@ -1,7 +1,9 @@
 
 const jwt = require('jsonwebtoken');
 const { ocn } = require('../routes/basics');
-const { vapid_private_key } = require('../configs/config');
+
+// Use dedicated JWT secret, fallback to VAPID key for backwards compatibility
+const JWT_SECRET = process.env.JWT_SECRET || process.env.VAPID_PRIVATE_KEY;
 
 module.exports = (req, res, next) => {
   try {
@@ -14,7 +16,7 @@ module.exports = (req, res, next) => {
     }
     
     // Verify token
-    const decoded = jwt.verify(token, vapid_private_key);
+    const decoded = jwt.verify(token, JWT_SECRET);
     
     // Set user from payload
     req.user = decoded;
