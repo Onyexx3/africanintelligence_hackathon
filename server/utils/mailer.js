@@ -257,9 +257,60 @@ const sendVerificationEmail = async (email, name, verificationUrl) => {
   }
 };
 
+/**
+ * Send test email
+ */
+async function sendTestEmail(email) {
+  const mailOptions = {
+    from: `"African Intelligence LMS" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: '✅ Email Configuration Test',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #1a1a1a; color: #ffffff;">
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 10px;">
+          <h1 style="margin: 0; color: #ffffff; font-size: 28px;">✅ Success!</h1>
+        </div>
+        
+        <div style="background-color: #2d2d2d; padding: 30px; border-radius: 10px; margin-top: 20px;">
+          <h2 style="color: #f97316; margin-top: 0;">Email Configuration Working</h2>
+          <p style="color: #e5e5e5; font-size: 16px; line-height: 1.6;">
+            Your email provider is properly configured! 🎉
+          </p>
+          
+          <p style="color: #a0a0a0; font-size: 14px;">
+            This is a test email to verify your SMTP configuration.
+          </p>
+          
+          <div style="margin-top: 30px; padding: 20px; background-color: #1a1a1a; border-radius: 8px; border-left: 4px solid #f97316;">
+            <p style="margin: 0; color: #e5e5e5;">
+              <strong>Provider:</strong> ${process.env.EMAIL_SERVICE || 'Not configured'}<br>
+              <strong>From:</strong> ${process.env.EMAIL_USER || 'Not configured'}<br>
+              <strong>Status:</strong> <span style="color: #22c55e;">✓ Active</span>
+            </p>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; padding: 20px; color: #808080; font-size: 12px;">
+          <p>African Intelligence LMS - Email Test</p>
+          <p>${new Date().toLocaleString()}</p>
+        </div>
+      </div>
+    `
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Test email sent successfully to:', email);
+  } catch (error) {
+    console.error('Test email send error:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   sendEnrollmentNotification,
   sendWelcomeEmail,
   sendPasswordResetEmail,
-  sendVerificationEmail
+  sendVerificationEmail,
+  sendTestEmail
 };

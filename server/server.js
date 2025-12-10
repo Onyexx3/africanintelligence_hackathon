@@ -110,7 +110,8 @@ async function startServer() {
     
     // API Routes
     app.use('/api/auth', authLimiter, authRoutes);
-    app.use('/api/admin', adminRoutes); 
+    app.use('/api/admin', adminRoutes);
+    app.use('/api/admin', adminSettingsRoutes); 
     app.use('/api/facilitator', facilitatorRoutes);
     app.use('/api/learner', studentRoutes);
     app.use('/api/courses', courseRoutes);

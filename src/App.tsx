@@ -12,6 +12,9 @@ import Welcome from "./pages/auth/Welcome";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import VerifyEmail from "./pages/VerifyEmail";
+import Setup2FA from "./pages/Setup2FA";
+import Verify2FA from "./pages/Verify2FA";
+import AdminSettings from "./pages/admin/Settings";
 import { Toaster } from "@/components/ui/toaster";
 import { NavigationProvider } from "./contexts/NavigationContext";
 import Layout from "./components/layout/Layout";
@@ -51,10 +54,13 @@ const App = () => {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
+              <Route path="/setup-2fa" element={<Setup2FA />} />
+              <Route path="/verify-2fa" element={<Verify2FA />} />
               
               {/* Protected Routes */}
               <Route path="/admin" element={<Layout userType="admin" />}>
                 <Route index element={<AdminDashboard />} />
+                <Route path="settings" element={<AdminSettings />} />
               </Route>
               
               <Route path="/facilitator" element={<Layout userType="facilitator" />}>
