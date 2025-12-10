@@ -16,6 +16,7 @@ const contactRoutes = require('./routes/contactRoutes');
 const adminServices = require('./services/adminServices');
 const webpush = require('web-push');
 const { clg } = require('./routes/basics');
+const { apiLimiter, authLimiter, uploadLimiter } = require('./middleware/rateLimiter');
 
 // Configure the environment
 require('dotenv').config();
@@ -24,8 +25,30 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// CORS Configuration - Security Fix
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? [process.env.FRONTEND_URL || 'https://yourdomain.com']
+  : ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:5174'];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -57,15 +80,18 @@ async function startServer() {
     // Initialize API documentation
     await adminServices.initializeDefaultDocumentation(app.locals.db);
     
+    // Apply rate limiting
+    app.use('/api/', apiLimiter);
+    
     // API Routes
-    app.use('/api/auth', authRoutes);
+    app.use('/api/auth', authLimiter, authRoutes);
     app.use('/api/admin', adminRoutes); 
     app.use('/api/facilitator', facilitatorRoutes);
     app.use('/api/learner', studentRoutes);
     app.use('/api/courses', courseRoutes);
     app.use('/api/forum', forumRoutes);
     app.use('/api/notifications', notificationRoutes);
-    app.use('/api/upload', uploadRoutes);
+    app.use('/api/upload', uploadLimiter, uploadRoutes);
     app.use('/api/contact', contactRoutes);
     
     // Serve static files in production
