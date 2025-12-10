@@ -1,6 +1,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const { MongoClient } = require('mongodb');
 const path = require('path');
 const auth = require('./middleware/auth');
@@ -48,9 +49,23 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
 };
 
+// Security headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", 'data:', 'https:'],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+}));
+
 // Middleware
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static('public'));
 
 // Configure Web Push
