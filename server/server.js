@@ -19,6 +19,8 @@ const webpush = require('web-push');
 const { clg } = require('./routes/basics');
 const { apiLimiter, authLimiter, uploadLimiter } = require('./middleware/rateLimiter');
 const { errorConverter, errorHandler, notFound } = require('./middleware/errorHandler');
+const setupDatabaseIndexes = require('./utils/setupIndexes');
+const { sanitizeInputs } = require('./middleware/validate');
 
 // Configure the environment
 require('dotenv').config();
@@ -66,6 +68,7 @@ app.use(helmet({
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(sanitizeInputs); // Sanitize all inputs
 app.use(express.static('public'));
 
 // Configure Web Push
@@ -95,6 +98,9 @@ async function startServer() {
     
     // Initialize API documentation
     await adminServices.initializeDefaultDocumentation(app.locals.db);
+    
+    // Setup database indexes for performance
+    await setupDatabaseIndexes(app.locals.db);
     
     // Apply rate limiting
     app.use('/api/', apiLimiter);
